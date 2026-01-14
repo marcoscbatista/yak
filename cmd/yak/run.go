@@ -19,7 +19,7 @@ func run() int {
 	app := cli.NewCli(cb, rd)
 
 	if err := app.Run(os.Args); err != nil {
-		fmt.Fprintln(os.Stderr, "Error", err)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return 1
 	}
 	return 0
