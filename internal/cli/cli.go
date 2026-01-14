@@ -2,6 +2,10 @@
 package cli
 
 import (
+	"errors"
+	"fmt"
+	"path/filepath"
+
 	"marcoscbatista/yak/internal/clipboard"
 	"marcoscbatista/yak/internal/reader"
 )
@@ -18,11 +22,23 @@ func NewCli(cb clipboard.Clipboard, rd reader.Reader) *CLI {
 	}
 }
 
-func (c *CLI) Run(path string) error {
+func (c *CLI) Run(args []string) error {
+	if len(args) < 2 {
+		return errors.New("usage: yak <dir>")
+	}
+
+	rawPath := args[1]
+
+	path, err := filepath.Abs(rawPath)
+	if err != nil {
+		return fmt.Errorf("failed to resolve path: %w", err)
+	}
+
 	content, err := c.reader.Read(path)
+	fmt.Println(content)
 	if err != nil {
 		return err
 	}
-	c.clipboard.Write(content)
-	return nil
+
+	return c.clipboard.Write(content)
 }
