@@ -58,7 +58,6 @@ The content is now in your system clipboard, ready to paste anywhere!
 
 ## Use Cases
 
-- Quickly share code snippets with colleagues
 - Copy configuration files for documentation
 - Transfer log contents for debugging
 - Paste file contents into web forms or chat applications
@@ -77,5 +76,3 @@ Contributions are welcome! Feel free to:
 Distributed under the **GPL-3.0 License**. See [LICENSE](LICENSE) for more information.
 
 ---
-
-Made by [Marcos Batista](https://github.com/marcoscbatista)
