@@ -35,7 +35,6 @@ func (c *CLI) Run(args []string) error {
 	}
 
 	content, err := c.reader.Read(path)
-	fmt.Println(content)
 	if err != nil {
 		return err
 	}
