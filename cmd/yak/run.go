@@ -2,29 +2,24 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
-	"path/filepath"
 
 	"marcoscbatista/yak/internal/cli"
+	"marcoscbatista/yak/internal/clipboard"
+	"marcoscbatista/yak/internal/reader"
 )
 
-func run(cli *cli.CLI) int {
-	if len(os.Args) != 2 {
-		fmt.Fprintln(os.Stderr, "usage: yak <dir>")
-		return 1
+func run() int {
+	cb, err := clipboard.NewClipboard()
+	if err != nil {
+		log.Fatal(err)
 	}
-	dir := os.Args[1]
+	rd := reader.NewReader()
+	app := cli.NewCli(cb, rd)
 
-	if !filepath.IsAbs(dir) {
-		abs, err := filepath.Abs(dir)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-		}
-		dir = abs
-	}
-	fmt.Println(dir)
-	if err := cli.Run(dir); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return 1
 	}
 	return 0
