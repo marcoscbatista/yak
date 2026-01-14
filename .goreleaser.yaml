@@ -1,0 +1,69 @@
+version: 2
+
+project_name: yak
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - main: ./cmd/yak/
+    binary: yak
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - 386
+    ignore:
+      - goos: darwin
+        goarch: 386
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    files:
+      - LICENSE
+      - README.md
+
+nfpms:
+  - id: yak-packages
+    package_name: yak
+    vendor: "Marcos C. Batista"
+    homepage: "https://example.com/"
+    maintainer: "Marcos C. Batista <marcos.cbatista04@gmail.com>"
+    description: "yak copies the contents of a file to the system clipboard."
+    license: "GPL-3.0"
+    formats:
+      - deb
+      - rpm
+      - archlinux
+    bindir: /usr/bin
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  github:
+    owner: marcoscbatista
+    name: yak
